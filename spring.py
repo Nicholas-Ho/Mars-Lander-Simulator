@@ -3,20 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# mass, spring constant, initial position and velocity
-m = 1
-k = 1
-x = 0
-v = 1
-
-conditions = (m, k, x, v)
-
-# simulation time, timestep and time
-t_max = 100
-dt = 0.1
-t_array = np.arange(0, t_max, dt)
-
-def euler_int(conditions, dt, t_array):
+def euler_int(conditions, dt, t_array, plot=False):
     # constants and initial conditions
     m, k, x, v = conditions
 
@@ -40,17 +27,20 @@ def euler_int(conditions, dt, t_array):
     x_array = np.array(x_list)
     v_array = np.array(v_list)
 
-    # plot the position-time graph
-    plt.figure(1)
-    plt.clf()
-    plt.xlabel('time (s)')
-    plt.grid()
-    plt.plot(t_array, x_array, label='x (m)')
-    plt.plot(t_array, v_array, label='v (m/s)')
-    plt.legend()
-    plt.show()
+    if plot:
+        # plot the position-time graph
+        plt.figure(1)
+        plt.clf()
+        plt.xlabel('time (s)')
+        plt.grid()
+        plt.plot(t_array, x_array, label='x (m)')
+        plt.plot(t_array, v_array, label='v (m/s)')
+        plt.legend()
+        plt.show()
+        
+    return x_array, v_array
 
-def verlet_int(conditions, dt, t_array):
+def verlet_int(conditions, dt, t_array, plot=False):
     # constants and initial conditions
     m, k, x, v = conditions
 
@@ -76,16 +66,34 @@ def verlet_int(conditions, dt, t_array):
     x_array = np.array(x_list[:-1])
     v_array = np.array(v_list)
 
-    # plot the position-time graph
-    plt.figure(1)
-    plt.clf()
-    plt.xlabel('time (s)')
-    plt.grid()
-    plt.plot(t_array, x_array, label='x (m)')
-    plt.plot(t_array, v_array, label='v (m/s)')
-    plt.legend()
-    plt.show()
+    if plot:
+        # plot the position-time graph
+        plt.figure(1)
+        plt.clf()
+        plt.xlabel('time (s)')
+        plt.grid()
+        plt.plot(t_array, x_array, label='x (m)')
+        plt.plot(t_array, v_array, label='v (m/s)')
+        plt.legend()
+        plt.show()
+
+    return x_array, v_array
+
+# Testing
+
+# mass, spring constant, initial position and velocity
+m = 1
+k = 1
+x = 0
+v = 1
+
+conditions = (m, k, x, v)
+
+# simulation time, timestep and time
+t_max = 100
+dt = 0.1
+t_array = np.arange(0, t_max, dt)
 
 if __name__ == "__main__":
-    euler_int(conditions, dt, t_array)
-    verlet_int(conditions, dt, t_array)
+    euler_int(conditions, dt, t_array, plot=True)
+    verlet_int(conditions, dt, t_array, plot=True)
