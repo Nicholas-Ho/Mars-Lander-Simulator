@@ -1,5 +1,3 @@
-# uncomment the next line if running in a notebook
-# %matplotlib inline
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -45,7 +43,7 @@ def verlet_int(conditions, dt, t_array, plot=False):
     m, k, x, v = conditions
 
     # initialise lists to record trajectories
-    x_list = [x, dt*v]
+    x_list = [x, x + dt*v]
     v_list = [v]
 
     # Verlet integration

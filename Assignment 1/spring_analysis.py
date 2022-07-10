@@ -145,4 +145,4 @@ if __name__ == '__main__':
     euler_e = test_euler_error()
     verlet_e = test_verlet_error()
     plot_all([int_e, euler_e, verlet_e])
-    test_verlet_stability(thresh=10, plot=True)
+    test_verlet_stability(thresh=20, plot=True)
