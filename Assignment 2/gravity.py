@@ -1,17 +1,18 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from plot_utils import plot_anim
 
 # Universal gravitation constant
 G = 6.67430e-11
 
-def euler_int(conditions, dt, t_array, plot=False):
+def euler_int(conditions, dt, t_array):
     # constants and initial conditions
-    m, M, position, velocity = conditions
+    m, M, R, position, velocity = conditions
 
     # initialise empty lists to record trajectories
     pos_list = []
     vel_list = []
+
+    # collision checking
+    collision = False
 
     # Euler integration
     for t in t_array:
@@ -19,6 +20,11 @@ def euler_int(conditions, dt, t_array, plot=False):
         # append current state to trajectories
         pos_list.append(position)
         vel_list.append(velocity)
+
+        # check for collisions
+        if np.linalg.norm(position) <= R:
+            collision = True
+            break
 
         # calculate new position and velocity
         # note: all vectors
@@ -30,19 +36,19 @@ def euler_int(conditions, dt, t_array, plot=False):
     # convert trajectory lists into arrays, so they can be sliced (useful for Assignment 2)
     pos_array = np.array(pos_list)
     vel_array = np.array(vel_list)
-
-    if plot:
-        plot_anim(pos_array, 'Euler', fps=6000)
         
-    return pos_array, vel_array
+    return pos_array, vel_array, collision
 
-def verlet_int(conditions, dt, t_array, plot=False):
+def verlet_int(conditions, dt, t_array):
     # constants and initial conditions
-    m, M, position, velocity = conditions
+    m, M, R, position, velocity = conditions
 
     # initialise lists to record trajectories
     pos_list = [position, position + dt*velocity]
     vel_list = [velocity]
+
+    # collision checking
+    collision = False
 
     # Verlet integration
     # will result in x_list that has an extra entry of t = t_max+1
@@ -53,43 +59,20 @@ def verlet_int(conditions, dt, t_array, plot=False):
         current_pos_unit = pos_list[-1] / np.linalg.norm(pos_list[-1])
         a = -(G*M) * current_pos_unit / (np.linalg.norm(pos_list[-1])**2) # current acceleration
 
-        x = 2 * pos_list[-1] - pos_list[-2] + (dt**2) * a
-        v = (x - pos_list[-2]) / (2 * dt)
+        position = 2 * pos_list[-1] - pos_list[-2] + (dt**2) * a
+        velocity = (position - pos_list[-2]) / (2 * dt)
 
         # append new state to trajectories
-        pos_list.append(x)
-        vel_list.append(v)
+        pos_list.append(position)
+        vel_list.append(velocity)
+
+        # check for collisions
+        if np.linalg.norm(pos_list[-1]) <= R:
+            collision = True
+            break
 
     # convert trajectory lists into arrays, so they can be sliced (useful for Assignment 2)
     pos_array = np.array(pos_list[:-1])
     vel_array = np.array(vel_list)
 
-    if plot:
-        plot_anim(pos_array, 'Verlet', fps=6000)
-
-    return pos_array, vel_array
-
-# Testing
-
-# mass, spring constant, initial position and velocity
-m = 1
-M = 6.42e23
-position = np.array([1e2, 0, 0]) # [x, y, z]
-velocity = np.array([0, 0, 0]) # [x, y, z]
-
-conditions = (m, M, position, velocity)
-
-# simulation time, timestep and time
-t_max = 1e3
-
-if __name__ == "__main__":
-
-    dt = 0.1
-    t_array = np.arange(0, t_max, dt)
-
-    euler_int(conditions, dt, t_array, plot=True)
-
-    # dt = 1
-    # t_array = np.arange(0, t_max, dt)
-
-    # verlet_int(conditions, dt, t_array, plot=True)
+    return pos_array, vel_array, collision
