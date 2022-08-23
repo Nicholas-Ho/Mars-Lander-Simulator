@@ -20,11 +20,34 @@ void autopilot (void)
   // INSERT YOUR CODE HERE
 }
 
+void euler_update () {
+
+  // Calculate total mass (lander + )
+  double mass;
+  mass = UNLOADED_LANDER_MASS + (FUEL_CAPACITY * FUEL_DENSITY * fuel);
+
+  // Calculate Acceleration via Forces
+  vector3d thr, gravity, lander_drag, chute_drag, acceleration;
+
+  thr = thrust_wrt_world();
+  gravity = -(GRAVITY * MARS_MASS * mass) * position.norm() / position.abs2();
+  lander_drag = -0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * (M_PI*LANDER_SIZE*LANDER_SIZE) * velocity.abs2() * velocity.norm();
+  chute_drag = -0.5 * atmospheric_density(position) * DRAG_COEF_LANDER * (5.0*2.0*LANDER_SIZE*2.0*LANDER_SIZE) * velocity.abs2() * velocity.norm();
+
+  acceleration = (thr + gravity + lander_drag + chute_drag) / mass;
+
+  // Position
+  position = position + (delta_t*velocity);
+
+  // Velocity
+  velocity = velocity + (delta_t*acceleration);
+}
+
 void numerical_dynamics (void)
   // This is the function that performs the numerical integration to update the
   // lander's pose. The time step is delta_t (global variable).
 {
-  // INSERT YOUR CODE HERE
+  euler_update();
 
   // Here we can apply an autopilot to adjust the thrust, parachute and attitude
   if (autopilot_enabled) autopilot();
