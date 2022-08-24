@@ -3,7 +3,7 @@ This is the Part IB Summer Holiday computing activity at the Department of Engin
 
 The aim of the project is to build a physics engine for a Mars Lander simulator and program an autopilot to successfully land the Mars Lander.
 
-![Mars Lander Simulator Orbit]('images/Mars Lander_Orbit')
+![Mars Lander Simulator Orbit](images/mars_lander_orbit.gif)
 
 The graphics and framework was written by Professors Andrew Gee and Gabor Csanyi, while the physics engine and the autopilot were written by Nicholas Ho.
 
@@ -17,4 +17,4 @@ Assignment 3 was for the familiarisation of writing in C++, and is simply a port
 The code for Assignments 3, 4 and 5 are written in **C++**. The code for Assignment 3 has been pre-compiled using the MSVC compiler. The Mars Lander simulator (Assignments 4 and 5) are a Visual Studio C++ project and must be run from Visual Studio with `nupengl.core` installed.
 
 ## Autopilot Demo
-![Mars Lander Simulator Autopilot]('images/Mars Lander_Autopilot')
+![Mars Lander Simulator Autopilot](images/mars_lander_autopilot.gif)
