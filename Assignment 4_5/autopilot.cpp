@@ -2,9 +2,12 @@
 
 #include "lander.h"
 
+// Forward-declare calculate_acceleration() from numerical_integration.cpp
+vector3d calculate_acceleration();
+
 // Constants
-double height_const = 3e-2;
-double controller_gain = 1;
+double height_const = 2e-2;
+double controller_gain = 1.2;
 double delta_offset = 0.5;
 
 // Calculate error
@@ -21,6 +24,17 @@ void autopilot (void)
     double error, P_out;
     error = calculate_error();
     P_out = controller_gain * error;
+
+    // Calculate if it is safe to deploy the parachute
+
+    // First calculate if the lander is decelerating
+    vector3d acceleration = calculate_acceleration();
+    bool decelerating = (acceleration*velocity < 0);
+
+    // Then check if it is safe in general and decelerating
+    if (safe_to_deploy_parachute() && decelerating) {
+        parachute_status = DEPLOYED;
+    }
 
     // Calculate throttle
     if (P_out <= -delta_t) {
